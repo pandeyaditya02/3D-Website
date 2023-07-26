@@ -1,0 +1,164 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
+import { Tilt } from "react-tilt";
+
+import { styles } from "../styles";
+import { navLinks } from "../constants";
+import { buffercodeLogo } from "../assets";
+
+const Navbar = (props) => {
+
+  const { setHeading } = props;
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const [active, setActive] = useState("");
+  const [toggle, setToggle] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      if (scrollTop > 100) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    
+    // setHeading(active);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <nav 
+      className={`${
+        styles.paddingX
+      } w-full flex items-center py-5 fixed top-0 z-20 ${
+        scrolled ? "bg-primary" : "bg-transparent"
+      }`}
+    >
+      <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
+        <Link
+          to="/"
+          className="flex items-center gap-2"
+          onClick={() => {
+            setActive("");
+            window.scrollTo(0, 0);
+          }}
+        >
+          <img
+            src={buffercodeLogo}
+            alt="logo"
+            className="w-9 h-9 object-contain"
+          />
+          <p className="text-white text-[18px] font-bold cursor-pointer flex ">
+            BUFFERCODE
+          </p>
+        </Link>
+
+        <ul className="list-none hidden sm:flex flex-row gap-10">
+          {navLinks.map((nav) => (
+            <li
+              key={nav.id}
+              className={`${
+                active === nav.title ? "text-white" : "text-secondary"
+              } hover:text-white text-[18px] font-medium cursor-pointer	`}
+              onClick={() => 
+                {
+                  setActive(nav.title);
+                  setHeading(nav.title);
+                }                
+              }
+              onMouseEnter={
+                nav.title === "Partners" ? handleMouseEnter : undefined
+              }
+              onMouseLeave={
+                nav.title === "Partners" ? handleMouseLeave : undefined
+              }
+            >
+              <a href={`#${nav.id}`} className="flex gap-1 ">
+                <div>{nav.title}</div>
+                <div className="m-auto	">{nav.icon && <nav.icon />}</div>
+              </a>
+
+              {nav.title === "Partners" && (
+                <div
+                  className={`${
+                    isHovered ? "flex" : "hidden"
+                  } p-6 absolute black-gradient m-auto z-10 rounded-xl`}
+                >
+                  <ul className="list-none flex justify-end items-start flex-1 flex-col gap-4">
+                    <li>computer and storage</li>
+                    <li>Cloud</li>
+                    <li>Networking</li>
+                    <li>Cybersecurity</li>
+                  </ul>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <div className="sm:hidden flex flex-1 justify-end items-center">
+          {toggle ? (
+            <RiCloseLine
+              color="#fff"
+              size={27}
+              onClick={() => setToggle(false)}
+            />
+          ) : (
+            <RiMenu3Line
+              color="#fff"
+              size={27}
+              onClick={() => setToggle(true)}
+            />
+          )}
+
+          <div
+            className={`${
+              !toggle ? "hidden" : "flex"
+            } p-6 black-gradient absolute top-20 right-0 mx-4 my-2 min-w-[140px] z-10 rounded-xl`}
+          >
+            <Tilt
+              options={{
+                max: 45,
+                scale: 1,
+                speed: 450,
+              }}
+            >
+              <ul className="list-none flex justify-end items-start flex-1 flex-col gap-4 ">
+                {navLinks.map((nav) => (
+                  <li
+                    key={nav.id}
+                    className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                      active === nav.title ? "text-white" : "text-secondary"
+                    }`}
+                    onClick={() => {
+                      setToggle(!toggle);
+                      setActive(nav.title);
+                    }}
+                  >
+                    <a href={`#${nav.id}`}>{nav.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </Tilt>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
