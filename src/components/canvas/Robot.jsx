@@ -36,7 +36,7 @@ const Robots = ({ isMobile }) => {
       <pointLight intensity={5} />
       <primitive
         object={robot.scene}
-        scale={isMobile ? 0.7 : 1.2}
+        scale={isMobile ? 1.5 : 1.5}
         position-y={0}
         rotation-y={0}
       />
@@ -73,9 +73,9 @@ const RobotsCanvas = () => {
   return (
     <Canvas
       style={{
-        // margin:"auto",
-        marginLeft: "auto",
-        width: "50%",
+        margin:"auto",
+        // marginLeft: "auto",
+        width: "70%",
       }}
       shadows
       frameloop="demand"
