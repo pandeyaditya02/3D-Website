@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { styles } from "../styles";
 import { RobotsCanvas } from "./canvas";
 const Hero = (props) => {
+  
   const { heading } = props;
 
   return (
